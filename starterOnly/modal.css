@@ -475,6 +475,31 @@ input[data-error]::after {
 .hero-section > .btn-signup {
   display: none;
 }
+
+.success {
+  display: none;
+  position: fixed;
+  max-width: 1300px;
+  margin: 0 auto;
+  height: 100%;
+  justify-content: center;
+  align-items: center;
+  z-index: 2;
+  animation: success ease-in-out 1s both;
+}
+
+.success-content {
+  position: relative;
+  background: #279e7a;
+  padding: 15px;
+  border-radius: 5px;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: 1px;
+  font-size: 22px;
+  max-width: 500px;
+}
+
 footer {
   padding-left: 2vw;
   padding-right: 2vw;
@@ -532,5 +557,15 @@ footer {
 @keyframes modalclose {
   to {
     opacity: 0;
+  }
+}
+
+@keyframes success {
+  from {
+    opacity: 0;
+    transform: translateY(-150px);
+  }
+  to {
+    opacity: 1;
   }
 }
