@@ -146,7 +146,7 @@ class Input {
 
   removeError() {
     this.inputs[0].parentElement.dataset.errorVisible = false;
-    this.inputs[0].parentElement.dataset.error = null;
+    this.inputs[0].parentElement.dataset.error = '';
     this.error = null;
   }
 }
