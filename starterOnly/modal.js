@@ -105,10 +105,9 @@ class Input {
       return this.error;
     }
     // Checkbox & Radio
-    if (this.type === 'checkbox') {
-      if (!this.inputs[0].checked) {
-        this.error = `Veuillez accepter les conditions d'utilisations`;
-      }
+    if (this.type === 'checkbox' && !this.checked) {
+      this.error = `Veuillez accepter les conditions d'utilisations`;
+      return this.error;
     }
     if (this.type === 'radio') {
       this.inputs.forEach(input => {
@@ -173,11 +172,11 @@ const fields = [
 fields.forEach(field => {
   field.inputs.forEach(input => {
     input.addEventListener('change', event => {
-      console.log(field.type);
-      console.log(field.validity);
       // Updater la value de l'input sinon elle reste identique à celle définie dans le constructor, pq ?
       field.value = event.target.value;
-      console.log('Value is ', field.value);
+      if (field.type === 'checkbox' || field.type === 'radio') {
+        field.checked = event.target.checked;
+      }
       // Si une erreur est présente la montrer
       if (field.hasError()) {
         field.showError();
