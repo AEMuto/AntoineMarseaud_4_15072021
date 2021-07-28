@@ -1,80 +1,70 @@
 function editNav() {
-  var x = document.getElementById("myTopnav");
-  if (x.className === "topnav") {
-    x.className += " responsive";
+  var x = document.getElementById('myTopnav');
+  if (x.className === 'topnav') {
+    x.className += ' responsive';
   } else {
-    x.className = "topnav";
+    x.className = 'topnav';
   }
 }
 
 // DOM Elements
-const modalBackground = document.querySelector(".bground");
-const modalContent = document.querySelector(".content");
-const modalBody = document.querySelector(".modal-body");
-const modalButton = document.querySelector(".modal-btn");
+const modalBackground = document.querySelector('.bground');
+const modalContent = document.querySelector('.content');
+const modalBody = document.querySelector('.modal-body');
+const modalButton = document.querySelector('.modal-btn');
 
-const formData = document.querySelectorAll(".formData");
-const [firstName, lastName, email, birthDate, tournamentNumber, cities, terms] =
-  formData;
+const formData = document.querySelectorAll('.formData');
 
 // launch modal event
-modalButton.addEventListener("click", toggleModal);
+modalButton.addEventListener('click', toggleModal);
 
 // launch modal form
 function toggleModal() {
-  modalBackground.style.display === "block"
-    ? (modalBackground.style.display = "none")
-    : (modalBackground.style.display = "block");
+  modalBackground.style.display === 'block'
+    ? (modalBackground.style.display = 'none')
+    : (modalBackground.style.display = 'block');
 }
 
 function toggleModalAnimation() {
-  modalContent.style.animationName === "modalopen"
-    ? (modalContent.style.animationName = "modalclose")
-    : (modalContent.style.animationName = "modalopen");
+  modalContent.style.animationName === 'modalopen'
+    ? (modalContent.style.animationName = 'modalclose')
+    : (modalContent.style.animationName = 'modalopen');
 }
 
 // launch success
 function toggleSuccess() {
-  document.querySelector(".success").style.display === "flex"
-    ? (document.querySelector(".success").style.display = "none")
-    : (document.querySelector(".success").style.display = "flex");
+  document.querySelector('.success').style.display === 'flex'
+    ? (document.querySelector('.success').style.display = 'none')
+    : (document.querySelector('.success').style.display = 'flex');
 }
 
 // close modal
-document.querySelector("span.close").addEventListener("click", e => {
+document.querySelector('span.close').addEventListener('click', e => {
   e.stopPropagation();
-  modalContent.style.animationName = "modalclose";
+  modalContent.style.animationName = 'modalclose';
   setTimeout(toggleModal, 700);
   setTimeout(toggleModalAnimation, 700);
 });
 
 let outsideModal = true;
 
-modalBody.addEventListener("mouseleave", () => {
+modalBody.addEventListener('mouseleave', () => {
   outsideModal = true;
 });
-modalBody.addEventListener("mouseenter", () => {
+modalBody.addEventListener('mouseenter', () => {
   outsideModal = false;
 });
 
-modalBackground.addEventListener("click", e => {
+modalBackground.addEventListener('click', e => {
   if (outsideModal) {
     e.stopPropagation();
-    modalContent.style.animationName = "modalclose";
+    modalContent.style.animationName = 'modalclose';
     setTimeout(toggleModal, 700);
     setTimeout(toggleModalAnimation, 700);
   }
 });
 
 // Form Control
-
-function nameValidation(value) {
-  return /^[a-zA-Z]{2,}$/.test(value);
-}
-
-function emailValidation(value) {
-  return /\b[\w\.-]+@[\w\.-]+\.\w{2,4}\b/.test(value);
-}
 
 function birthDateValidation(value) {
   const inputDate = new Date(value);
@@ -89,138 +79,139 @@ function birthDateValidation(value) {
   }
 }
 
-let firstNameIsValid;
-firstName.querySelector(".text-control").addEventListener("change", event => {
-  if (nameValidation(event.target.value)) {
-    firstName.setAttribute("data-error-visible", "false");
-    firstNameIsValid = true;
-  } else {
-    firstName.setAttribute("data-error-visible", "true");
-    firstName.setAttribute(
-      "data-error",
-      "Veuillez entrer 2 caractères alphabétiques ou plus"
-    );
-  }
-});
-
-let lastNameIsValid;
-lastName.querySelector(".text-control").addEventListener("change", event => {
-  if (nameValidation(event.target.value)) {
-    lastName.setAttribute("data-error-visible", "false");
-    lastNameIsValid = true;
-  } else {
-    lastName.setAttribute("data-error-visible", "true");
-    lastName.setAttribute(
-      "data-error",
-      "Veuillez entrer 2 caractères alphabétiques ou plus"
-    );
-  }
-});
-
-let emailIsValid;
-email.querySelector(".text-control").addEventListener("change", event => {
-  if (emailValidation(event.target.value)) {
-    email.setAttribute("data-error-visible", "false");
-    emailIsValid = true;
-  } else {
-    email.setAttribute("data-error-visible", "true");
-    email.setAttribute(
-      "data-error",
-      "Veuillez entrer une adresse email valide"
-    );
-  }
-});
-
-let birthDateIsValid;
-birthDate.querySelector(".text-control").addEventListener("change", event => {
-  if (birthDateValidation(event.target.value)) {
-    birthDate.setAttribute("data-error-visible", "false");
-    birthDateIsValid = true;
-  } else {
-    birthDate.setAttribute("data-error-visible", "true");
-    birthDate.setAttribute(
-      "data-error",
-      "Vous devez entrer votre date de naissance et avoir au moins 13 ans"
-    );
-  }
-});
-
-let tournamentNumberIsValid;
-tournamentNumber
-  .querySelector(".text-control")
-  .addEventListener("change", event => {
-    let value = event.target.value;
-    if (value >= 0 && value <= 99) {
-      tournamentNumber.setAttribute("data-error-visible", "false");
-      tournamentNumberIsValid = true;
-    } else {
-      tournamentNumber.setAttribute("data-error-visible", "true");
-      tournamentNumber.setAttribute(
-        "data-error",
-        "Veuillez entrer une valeur correcte"
-      );
+class Input {
+  constructor(element) {
+    this.inputs = document.querySelectorAll(`input[name="${element}"]`);
+    this.isValid = false;
+    this.validity = this.inputs[0].validity;
+    this.type = this.inputs[0].getAttribute('type');
+    this.value = this.inputs[0].value;
+    this.error;
+    // Radio ou chekbox edge case
+    if (this.type === 'radio' || this.type === 'checkbox') {
+      this.checked = false;
     }
-  });
-
-let citiesIsValid;
-cities.querySelectorAll("input[name='location']").forEach(city => {
-  city.addEventListener("change", event => {
-    if (city.checked) {
-      cities.setAttribute("data-error-visible", "false");
-      citiesIsValid = true;
-    } else {
-      cities.setAttribute("data-error-visible", "true");
-      cities.setAttribute("data-error", "Veuillez sélectionner une ville");
-    }
-  });
-});
-
-let termsIsValid = true;
-terms.querySelector("#checkbox1").addEventListener("change", event => {
-  let element = terms.querySelector("#checkbox1");
-  if (element.checked) {
-    terms.setAttribute("data-error-visible", "false");
-    termsIsValid = true;
-  } else {
-    termsIsValid = false;
-    terms.setAttribute("data-error-visible", "true");
-    terms.setAttribute(
-      "data-error",
-      "Vous devez vérifier que vous acceptez les termes et conditions."
-    );
   }
+  // Pour générer les messages d'erreur classique on utilise l'API Validity
+  // Les cas particuliers sont birthdate, checkbox(terms) & radio(locations)
+  hasError() {
+    // Birthdate scenario
+    if (
+      this.type === 'date' &&
+      this.value &&
+      !birthDateValidation(this.value)
+    ) {
+      this.error = 'Veuillez rentrer une date de naissance correcte';
+      return this.error;
+    }
+    // Checkbox & Radio
+    if (this.type === 'checkbox') {
+      if (!this.inputs[0].checked) {
+        this.error = `Veuillez accepter les conditions d'utilisations`;
+      }
+    }
+    if (this.type === 'radio') {
+      this.inputs.forEach(input => {
+        if (!input.checked) {
+          this.error = 'Veuillez sélectionner une ville';
+          return this.error;
+        }
+      });
+    }
+    // Normal case scenario
+    if (this.validity.valueMissing) {
+      this.error = 'Veuillez remplir ce champs';
+      return this.error;
+    }
+    if (this.validity.patternMismatch) {
+      if (this.type === 'text') {
+        this.error = 'Veuillez entrer 2 caractères alphabétiques ou plus';
+        return this.error;
+      }
+      if (this.type === 'email') {
+        this.error = 'Veuillez entrer une adresse email valide';
+        return this.error;
+      }
+    }
+    if (this.validity.rangeUnderflow || this.validity.rangeOverflow) {
+      this.error = 'Veuillez rentrer un nombre entre 0 et 99';
+      return this.error;
+    }
+  }
+
+  showError() {
+    this.inputs[0].parentElement.dataset.errorVisible = true;
+    this.inputs[0].parentElement.dataset.error = this.error;
+  }
+
+  removeError() {
+    this.inputs[0].parentElement.dataset.errorVisible = false;
+    this.inputs[0].parentElement.dataset.error = null;
+    this.error = null;
+  }
+}
+
+const FirstName = new Input('first');
+const LastName = new Input('last');
+const Email = new Input('email');
+const BirthDate = new Input('birthdate');
+const Quantity = new Input('quantity');
+const Locations = new Input('location');
+const Terms = new Input('term');
+
+const fields = [
+  FirstName,
+  LastName,
+  Email,
+  BirthDate,
+  Quantity,
+  Locations,
+  Terms,
+];
+
+// Ajouter un listener sur chaque Input
+fields.forEach(field => {
+  field.inputs.forEach(input => {
+    input.addEventListener('change', event => {
+      console.log(field.type);
+      console.log(field.validity);
+      // Updater la value de l'input sinon elle reste identique à celle définie dans le constructor, pq ?
+      field.value = event.target.value;
+      console.log('Value is ', field.value);
+      // Si une erreur est présente la montrer
+      if (field.hasError()) {
+        field.showError();
+        field.isValid = false;
+      }
+      // S'il n'y a aucune erreur enlever l'erreur précédente & valider l'état de l'input
+      if (!field.hasError()) {
+        field.removeError();
+        field.isValid = true;
+      }
+    });
+  });
 });
 
 function validate(event) {
+  // Empêcher le comportement par défaut du submit
   event.preventDefault();
-  let inputsAreValid;
-  let inputs = [
-    firstNameIsValid,
-    lastNameIsValid,
-    emailIsValid,
-    birthDateIsValid,
-    tournamentNumberIsValid,
-    citiesIsValid,
-    termsIsValid,
-  ];
-  inputs.forEach(input => {
-    console.log(input);
-    if (!input) {
-      inputsAreValid = false;
-      // afficher le data-error correspondant
-    } else {
-      inputsAreValid = true;
-    }
-  });
-  console.log(inputsAreValid);
-  if (inputsAreValid) {
-    document.querySelector(".success").style.display = "flex";
-    setTimeout(toggleSuccess, 2000);
-    setTimeout(toggleModal, 2500);
+  // Les champs sont-ils valides ?
+  let fieldsAreValid = fields.every(field => field.isValid);
+  // Si faux récupérer les champs invalide et montrer leur erreur
+  if (!fieldsAreValid) {
+    let invalidFields = fields.filter(field => !field.isValid);
+    invalidFields.forEach(field => {
+      console.log('Champs invalide: ', field.type);
+      // Générer les erreurs
+      field.hasError();
+      // Montrer les erreurs
+      field.showError();
+    });
+  } else {
+    console.log('Champs validé');
   }
-  console.log("Form Submitted!");
 }
 
 document
   .querySelector("form[name='reserve']")
-  .addEventListener("submit", validate);
+  .addEventListener('submit', validate);
