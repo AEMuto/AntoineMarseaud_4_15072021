@@ -236,7 +236,7 @@ function validate(event) {
     });
   } else {
     // animation snackbar
-    console.log('Champs validé');
+    console.log('Merci ! Votre réservation a été reçue');
   }
 }
 
