@@ -1,38 +1,35 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 
 <head>
   <meta charset="utf-8" />
-  <title>Reservation</title>
+  <title>Réservation</title>
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <link rel="stylesheet" href="modal.css" />
+  <link rel="stylesheet" href="/css/main.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-  <link href="https://fonts.googleapis.com/css?family=DM+Sans" rel="stylesheet" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
 </head>
 
 <body>
 
-  <div class="topnav" id="myTopnav">
-    <div class="header-logo">
-      <img alt="logo" src="Logo.png" width="auto" height="auto" />
+  <nav class="nav" id="myTopnav">
+    <div class="nav__logo">
+      <img alt="logo" src="/img/logo.png" />
     </div>
-    <div class="main-navbar">
-
-      <a href="#" class="active"><span>Accueil</span></a>
-      <a href="#"><span>Détails de l'évènement</span></a>
-      <a href="#"><span>À propos</span></a>
-      <a href="#"><span>Contact</span></a>
-      <a href="#"><span>Évènements passés</span></a>
-      <a href="javascript:void(0);" class="icon" onclick="editNav()">
-        <i class="fa fa-bars"></i>
-      </a>
+    <a href="javascript:void(0);" class="burger" onclick="editNav()">
+      <i class="fa fa-bars"></i>
+    </a>
+    <div class="nav__links">
+      <a href="#" class="active">Détails de l'évènement</a>
+      <a href="#">À propos</a>
+      <a href="#">Contact</a>
+      <a href="#">Évènements passés</a>
     </div>
-  </div>
+  </nav>
   </div>
   <main>
-    <div class="success">
-      <p class="success-content">Merci ! Votre réservation a été reçue</p>
-    </div>
     <div class="hero-section">
       <div class="hero-content">
         <h1 class="hero-headline">
@@ -43,21 +40,19 @@
           Vous aimez jouer ? Notre prochain évènement gaming est ouvert
           aux réservations... Places limitées !
         </p>
-        <button class="btn-signup modal-btn">
+        <button class="btn btn--signup">
           je m'inscris
         </button>
       </div>
       <div class="hero-img">
-        <img src="./bg_img.jpg" alt="img" />
+        <img src="img/bg_img.jpg" alt="img" />
       </div>
-      <button class="btn-signup modal-btn">
+      <button class="btn btn--signup btn--mobile">
         je m'inscris
       </button>
     </div>
-
-    <div class="bground">
-      <div class="content">
-
+    <div class="modal-outer">
+      <div class="modal-inner">
         <span class="close"></span>
         <div class="modal-body">
           <form name="reserve" action="index.html" method="get" novalidate>
@@ -125,7 +120,7 @@
               </label>
               <br>
             </div>
-            <input class="btn-submit" type="submit" class="button" value="C'est parti" />
+            <input class="btn btn-submit" type="submit" value="C'est parti" />
           </form>
         </div>
       </div>
@@ -136,7 +131,7 @@
       Copyright 2014 - 2020, GameOn Inc.
     </p>
   </footer>
-  <script src="modal.js"></script>
+  <script src="/js/main.js"></script>
 </body>
 
 </html>

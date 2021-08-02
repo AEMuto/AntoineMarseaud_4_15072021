@@ -1,22 +1,24 @@
 function editNav() {
   var x = document.getElementById('myTopnav');
-  if (x.className === 'topnav') {
+  if (x.className === 'nav') {
     x.className += ' responsive';
   } else {
-    x.className = 'topnav';
+    x.className = 'nav';
   }
 }
 
 // DOM Elements
-const modalBackground = document.querySelector('.bground');
-const modalContent = document.querySelector('.content');
+const modalBackground = document.querySelector('.modal-outer');
+const modalContent = document.querySelector('.modal-inner');
 const modalBody = document.querySelector('.modal-body');
-const modalButton = document.querySelector('.modal-btn');
+const modalButton = document.querySelectorAll('.btn--signup');
 
 const formData = document.querySelectorAll('.formData');
 
 // launch modal event
-modalButton.addEventListener('click', toggleModal);
+modalButton.forEach(button => {
+  button.addEventListener('click', toggleModal);
+});
 
 // launch modal form
 function toggleModal() {
@@ -51,6 +53,7 @@ let outsideModal = true;
 modalBody.addEventListener('mouseleave', () => {
   outsideModal = true;
 });
+
 modalBody.addEventListener('mouseenter', () => {
   outsideModal = false;
 });
@@ -65,13 +68,17 @@ modalBackground.addEventListener('click', e => {
 });
 
 // Form Control
-
+/**
+ *
+ * @param {*} value
+ * @returns
+ */
 function birthDateValidation(value) {
   const inputDate = new Date(value);
-  const inputYear = inputDate.getFullYear();
+  const inputTime = inputDate.getTime();
   const currentDate = new Date();
-  const currentYear = currentDate.getFullYear();
-  const age = currentYear - inputYear;
+  const currentTime = currentDate.getTime();
+  const age = (currentTime - inputTime) / 31536000000; // nb de ms dans une année
   if (age > 12 && age < 120) {
     return true;
   } else {
@@ -79,6 +86,10 @@ function birthDateValidation(value) {
   }
 }
 
+/**
+ * Décrire ce que fait cette Classe
+ * @param {*} event
+ */
 class Input {
   constructor(element) {
     this.inputs = document.querySelectorAll(`input[name="${element}"]`);
@@ -87,13 +98,17 @@ class Input {
     this.type = this.inputs[0].getAttribute('type');
     this.value = this.inputs[0].value;
     this.error;
-    // Radio ou chekbox edge case
+    // Radio ou chekbox cas particulier
     if (this.type === 'radio' || this.type === 'checkbox') {
       this.checked = false;
     }
   }
-  // Pour générer les messages d'erreur classique on utilise l'API Validity
-  // Les cas particuliers sont birthdate, checkbox(terms) & radio(locations)
+
+  /**
+   * Pour générer les messages d'erreurs classique on utilise l'API Validity
+   * Les cas particuliers sont birthdate, checkbox(terms) & radio(locations)
+   * @returns
+   */
   hasError() {
     // Birthdate scenario
     if (
@@ -137,15 +152,24 @@ class Input {
       return this.error;
     }
   }
-
+  /**
+   * Avec la méthode closest() on récupère l'ancêtre le plus proche
+   * ayant la classe formData. On lui applique un attribut dataset
+   * error-visible avec une valeur de true pour que le css stylise le champs
+   * comme étant invalide. Puis on affiche le message d'erreur en récupérant
+   * la valeur de la propriété error précedemment générer par la méthode hasError()
+   */
   showError() {
-    this.inputs[0].parentElement.dataset.errorVisible = true;
-    this.inputs[0].parentElement.dataset.error = this.error;
+    this.inputs[0].closest('.formData').dataset.errorVisible = true;
+    this.inputs[0].closest('.formData').dataset.error = this.error;
   }
-
+  /**
+   * removeError() a une logique identique à showError(),
+   * sauf que l'on réinitialise les valeurs
+   */
   removeError() {
-    this.inputs[0].parentElement.dataset.errorVisible = false;
-    this.inputs[0].parentElement.dataset.error = '';
+    this.inputs[0].closest('.formData').dataset.errorVisible = false;
+    this.inputs[0].closest('.formData').dataset.error = '';
     this.error = null;
   }
 }
@@ -172,7 +196,7 @@ const fields = [
 fields.forEach(field => {
   field.inputs.forEach(input => {
     input.addEventListener('change', event => {
-      // Updater la value de l'input sinon elle reste identique à celle définie dans le constructor, pq ?
+      // Updater la value de l'input sinon elle reste identique à celle définie dans le constructor
       field.value = event.target.value;
       if (field.type === 'checkbox' || field.type === 'radio') {
         field.checked = event.target.checked;
@@ -191,6 +215,10 @@ fields.forEach(field => {
   });
 });
 
+/**
+ * Décrire ce que fait cette fonction
+ * @param {*} event
+ */
 function validate(event) {
   // Empêcher le comportement par défaut du submit
   event.preventDefault();
@@ -207,6 +235,7 @@ function validate(event) {
       field.showError();
     });
   } else {
+    // animation snackbar
     console.log('Champs validé');
   }
 }
