@@ -1,5 +1,5 @@
 function editNav() {
-  var x = document.getElementById('myTopnav');
+  let x = document.getElementById('myTopnav');
   if (x.className === 'nav') {
     x.className += ' responsive';
   } else {
@@ -8,62 +8,44 @@ function editNav() {
 }
 
 // DOM Elements
-const modalBackground = document.querySelector('.modal-outer');
-const modalContent = document.querySelector('.modal-inner');
-const modalBody = document.querySelector('.modal-body');
-const modalButton = document.querySelectorAll('.btn--signup');
-
+const modalOuter = document.querySelector('.modal-outer');
+const modalInner = document.querySelector('.modal-inner');
+const closeButton = document.querySelector('span.close');
+const openButton = document.querySelectorAll('.btn--signup');
 const formData = document.querySelectorAll('.formData');
 
-// launch modal event
-modalButton.forEach(button => {
-  button.addEventListener('click', toggleModal);
-});
+// Gestion de l'ouverture/fermeture de la modale
 
-// launch modal form
-function toggleModal() {
-  modalBackground.style.display === 'block'
-    ? (modalBackground.style.display = 'none')
-    : (modalBackground.style.display = 'block');
+function openModal() {
+  modalOuter.classList.add('open');
 }
 
-function toggleModalAnimation() {
-  modalContent.style.animationName === 'modalopen'
-    ? (modalContent.style.animationName = 'modalclose')
-    : (modalContent.style.animationName = 'modalopen');
+function closeModal() {
+  modalOuter.classList.remove('open');
 }
 
-// launch success
-function toggleSuccess() {
-  document.querySelector('.success').style.display === 'flex'
-    ? (document.querySelector('.success').style.display = 'none')
-    : (document.querySelector('.success').style.display = 'flex');
-}
-
-// close modal
-document.querySelector('span.close').addEventListener('click', e => {
-  e.stopPropagation();
-  modalContent.style.animationName = 'modalclose';
-  setTimeout(toggleModal, 700);
-  setTimeout(toggleModalAnimation, 700);
+// Ouvrir la modale avec le bouton d'inscription
+openButton.forEach(button => {
+  button.addEventListener('click', openModal);
 });
 
-let outsideModal = true;
+// Fermer la modale
 
-modalBody.addEventListener('mouseleave', () => {
-  outsideModal = true;
+// 1. Grâce au bouton de fermeture
+closeButton.addEventListener('click', closeModal);
+
+// 2. Si l'on clique en dehors de la modale
+modalOuter.addEventListener('click', e => {
+  const isOutside = !e.target.closest('.modal-inner');
+  if (isOutside) {
+    closeModal();
+  }
 });
 
-modalBody.addEventListener('mouseenter', () => {
-  outsideModal = false;
-});
-
-modalBackground.addEventListener('click', e => {
-  if (outsideModal) {
-    e.stopPropagation();
-    modalContent.style.animationName = 'modalclose';
-    setTimeout(toggleModal, 700);
-    setTimeout(toggleModalAnimation, 700);
+// 3. Si l'on presse le bouton Escape
+window.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    closeModal();
   }
 });
 

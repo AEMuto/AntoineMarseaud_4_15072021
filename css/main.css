@@ -9,7 +9,6 @@
   --primary: #fe142f;
   --secondary: #3876ac;
   --ternary: #279e7a;
-  --modal-duration: 0.8s;
 }
 
 * {
@@ -194,15 +193,29 @@ button {
 /* MAIN-start ******************************************************/
 main {
   flex: 1;
+  display: flex;
 }
 
 .hero-section {
   display: grid;
   grid-template-columns: repeat(14, 1fr);
-  height: max(100%, 600px);
+  flex: 1;
   border-radius: 10px;
   overflow: hidden;
   box-shadow: 0 2px 7px 2px rgba(0, 0, 0, 0.2);
+}
+
+/* Fix Firefox *************************************
+ * Les éléments d'une grille on une valeur implicite
+ * pour les propriétés min-width et min-height
+ * égale à 'auto'. En faisant un reset on permet à
+ * ces éléments d'être plus petit que la taille de
+ * leur contenu. Ce qui permet d'afficher 
+ * correctement (selon la maquette) l'arrière plan
+ * du texte de la section hero.
+*/
+.hero-section > * {
+  min-width: 0;
 }
 
 .hero-content {
@@ -318,7 +331,6 @@ footer .copyrights {
 
 /* MODAL-start *****************************************************/
 .modal-outer {
-  display: none;
   position: fixed;
   z-index: 1;
   inset: 0;
@@ -326,20 +338,33 @@ footer .copyrights {
   width: 100%;
   overflow: auto;
   background-color: rgba(26, 39, 156, 0.4);
+  /* Cacher la modale jusqu'à ce que l'on en ait besoin */
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.8s;
+}
+
+.modal-outer.open {
+  opacity: 1;
+  pointer-events: all;
 }
 
 .modal-inner {
   margin: 5% auto;
   width: 100%;
   max-width: 500px;
-  animation-name: modalopen;
-  animation-duration: var(--modal-duration);
   background: #232323;
   border-radius: 10px;
   overflow: hidden;
   position: relative;
   color: #fff;
   padding-top: 10px;
+  transform: translateY(-200%);
+  transition: transform 1.5s;
+}
+
+.modal-outer.open .modal-inner {
+  transform: translateY(0);
 }
 
 .modal-body {
@@ -504,29 +529,3 @@ input[data-error]::after {
 }
 
 /* MODAL-end *******************************************************/
-
-@keyframes modalopen {
-  from {
-    opacity: 0;
-    transform: translateY(-150px);
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-@keyframes modalclose {
-  to {
-    opacity: 0;
-  }
-}
-
-@keyframes success {
-  from {
-    opacity: 0;
-    transform: translateY(-150px);
-  }
-  to {
-    opacity: 1;
-  }
-}
