@@ -7,14 +7,17 @@ function editNav() {
   }
 }
 
-// DOM Elements
+// DOM Elements ----------------------------------------------------/
+
 const modalOuter = document.querySelector('.modal-outer');
 const modalInner = document.querySelector('.modal-inner');
-const closeButton = document.querySelector('span.close');
-const openButton = document.querySelectorAll('.btn--signup');
-const formData = document.querySelectorAll('.formData');
 
-// Gestion de l'ouverture/fermeture de la modale
+const openButton = document.querySelectorAll('.btn--signup');
+const closeButton = document.querySelector('span.close');
+
+const succesMessage = document.querySelector('.success-message');
+
+// Gestion de l'ouverture/fermeture de la modale -------------------/
 
 function openModal() {
   modalOuter.classList.add('open');
@@ -25,6 +28,7 @@ function closeModal() {
 }
 
 // Ouvrir la modale avec le bouton d'inscription
+
 openButton.forEach(button => {
   button.addEventListener('click', openModal);
 });
@@ -36,6 +40,14 @@ closeButton.addEventListener('click', closeModal);
 
 // 2. Si l'on clique en dehors de la modale
 modalOuter.addEventListener('click', e => {
+  /**
+   * Avec e.target on cible l'élément sur lequel on clique.
+   * Avec .closet('.modal-inner') on obtient l'ancêtre le plus
+   * proche qui a la classe 'modal-inner'. Si on clique à
+   * l'intérieur de l'élément 'modal-inner' ça nous le renvoit,
+   * sinon on obtient une valeur null. Grâce au '!' on
+   * transforme la valeur de retour en boolean.
+   */
   const isOutside = !e.target.closest('.modal-inner');
   if (isOutside) {
     closeModal();
@@ -43,24 +55,30 @@ modalOuter.addEventListener('click', e => {
 });
 
 // 3. Si l'on presse le bouton Escape
+
 window.addEventListener('keydown', e => {
   if (e.key === 'Escape') {
     closeModal();
   }
 });
 
-// Form Control
+// Validation du formulaire ----------------------------------------/
+
 /**
- *
+ * Vérifier que la date entré par l'utilisateur est correcte
+ * On calcule l'âge de l'utilisateur.
+ * Il faut qu'il ait entre 13 et 119 ans pour que la date
+ * soit considérée comme valide.
  * @param {*} value
  * @returns
  */
 function birthDateValidation(value) {
+  const msInYear = 31536000000;
   const inputDate = new Date(value);
   const inputTime = inputDate.getTime();
   const currentDate = new Date();
   const currentTime = currentDate.getTime();
-  const age = (currentTime - inputTime) / 31536000000; // nb de ms dans une année
+  const age = (currentTime - inputTime) / msInYear;
   if (age > 12 && age < 120) {
     return true;
   } else {
@@ -69,8 +87,11 @@ function birthDateValidation(value) {
 }
 
 /**
- * Décrire ce que fait cette Classe
- * @param {*} event
+ * Plutôt que de gérer les champs du formulaire au cas par cas
+ * on utilise une classe; Ce qui nous permet de garder notre code
+ * DRY. Cette classe Input prend en paramètre un élément du DOM
+ * correspondant au champs que l'on veut vérifier.
+ * @param {*} element
  */
 class Input {
   constructor(element) {
@@ -87,12 +108,24 @@ class Input {
   }
 
   /**
-   * Pour générer les messages d'erreurs classique on utilise l'API Validity
-   * Les cas particuliers sont birthdate, checkbox(terms) & radio(locations)
+   * Génération des messages d'erreurs
+   * Utilisation de l'API Validity en priorité pour la gestion des erreurs courantes.
+   * Les cas particuliers sont birthdate, checkbox(terms) et radio(locations).
+   * L'API Validity ne renvoit pas d'information si jamais l'utilisateur
+   * 1. Rentre une date de naissance incohérente (ex: supérieur à la date actuelle)
+   * 2. Ne coche pas une checkbox
+   * 3. Ne sélectionne aucun boutons radio
+   * La méthode va comparer les valeurs rentrées par l'utilisateur ou
+   * vérifier l'état de Validity. Si une erreur est trouvée on met à jour
+   * la propriété 'error' de l'instance de la classe avec un message d'erreur
+   * correspondant au type d'erreur.
+   * Puis on renvoit celle-ci, ce qui nous permet de vérifier facilement
+   * l'état de l'instance de la classe lors d'une conditionnelle.
+   * Le cas échéant renverrait 'undefined'.
    * @returns
    */
   hasError() {
-    // Birthdate scenario
+    // Date de naissance
     if (
       this.type === 'date' &&
       this.value &&
@@ -114,27 +147,36 @@ class Input {
         }
       });
     }
-    // Normal case scenario
+    // Erreurs courantes
+    if (this.validity.badInput) {
+      this.error = 'Veuillez rentrer une valeur correct';
+      return this.error;
+    }
     if (this.validity.valueMissing) {
       this.error = 'Veuillez remplir ce champs';
       return this.error;
     }
     if (this.validity.patternMismatch) {
       if (this.type === 'text') {
-        this.error = 'Veuillez entrer 2 caractères alphabétiques ou plus';
+        this.error = 'Veuillez rentrer 2 caractères alphabétiques ou plus';
         return this.error;
       }
       if (this.type === 'email') {
-        this.error = 'Veuillez entrer une adresse email valide';
+        this.error = 'Veuillez rentrer une adresse email valide';
         return this.error;
       }
     }
-    if (this.validity.rangeUnderflow || this.validity.rangeOverflow) {
-      this.error = 'Veuillez rentrer un nombre entre 0 et 99';
+    if (
+      this.validity.rangeUnderflow ||
+      this.validity.rangeOverflow ||
+      this.validity.stepMismatch
+    ) {
+      this.error = 'Veuillez rentrer un nombre entier entre 0 et 99';
       return this.error;
     }
   }
   /**
+   * Montrer l'erreur.
    * Avec la méthode closest() on récupère l'ancêtre le plus proche
    * ayant la classe formData. On lui applique un attribut dataset
    * error-visible avec une valeur de true pour que le css stylise le champs
@@ -146,6 +188,7 @@ class Input {
     this.inputs[0].closest('.formData').dataset.error = this.error;
   }
   /**
+   * Enlever l'erreur.
    * removeError() a une logique identique à showError(),
    * sauf que l'on réinitialise les valeurs
    */
@@ -178,7 +221,7 @@ const fields = [
 fields.forEach(field => {
   field.inputs.forEach(input => {
     input.addEventListener('change', event => {
-      // Updater la value de l'input sinon elle reste identique à celle définie dans le constructor
+      // Mettre à jour la valeur de l'input
       field.value = event.target.value;
       if (field.type === 'checkbox' || field.type === 'radio') {
         field.checked = event.target.checked;
@@ -197,28 +240,42 @@ fields.forEach(field => {
   });
 });
 
+function showSuccess() {
+  succesMessage.classList.add('valid');
+}
+
+function hideSuccess() {
+  succesMessage.classList.remove('valid');
+}
+
 /**
- * Décrire ce que fait cette fonction
+ * 1. Empêcher le comportement par défaut du submit
+ * 2. Les champs sont-ils valides ?
+ * => Si faux récupérer les champs invalide et montrer leur erreur
+ * => Sinon afficher le message de validation puis fermer la modale et
+ *    ensuite cacher le message de validation. Ainsi le formulaire est
+ *    de nouveau disponible si l'utilisateur décide de réaliser une
+ *    autre inscription.
  * @param {*} event
  */
+
 function validate(event) {
-  // Empêcher le comportement par défaut du submit
   event.preventDefault();
-  // Les champs sont-ils valides ?
   let fieldsAreValid = fields.every(field => field.isValid);
-  // Si faux récupérer les champs invalide et montrer leur erreur
   if (!fieldsAreValid) {
     let invalidFields = fields.filter(field => !field.isValid);
     invalidFields.forEach(field => {
-      console.log('Champs invalide: ', field.type);
-      // Générer les erreurs
       field.hasError();
-      // Montrer les erreurs
       field.showError();
     });
   } else {
-    // animation snackbar
-    console.log('Merci ! Votre réservation a été reçue');
+    showSuccess();
+    setTimeout(() => {
+      setTimeout(() => {
+        hideSuccess();
+      }, 500);
+      closeModal();
+    }, 1000);
   }
 }
 

@@ -32,6 +32,7 @@ body {
   flex-direction: column;
 }
 
+input,
 button,
 .btn {
   border: none;
@@ -103,8 +104,9 @@ button {
 
 .btn-submit {
   background: var(--primary);
-  margin-top: 0.5em;
+  margin-top: 1rem;
   color: #fff;
+  align-self: center;
 }
 
 .btn-submit:hover {
@@ -372,18 +374,22 @@ footer .copyrights {
   margin: 15px auto;
 }
 
+.modal-body form {
+  display: flex;
+  flex-direction: column;
+}
+
 label {
   font-family: var(--font-default);
   font-size: 17px;
   font-weight: normal;
   display: inline-block;
-  margin-bottom: 11px;
+  margin: 16px 0 6px 0;
 }
 
 input {
   padding: 8px;
   border: 0.8px solid #ccc;
-  outline: none;
 }
 
 .text-control {
@@ -397,7 +403,7 @@ input {
 
 .formData[data-error]::after {
   content: attr(data-error);
-  font-size: 0.4em;
+  font-size: 14px;
   color: #e54858;
   display: block;
   margin-top: 7px;
@@ -414,12 +420,6 @@ input {
 
 .formData[data-error-visible='true'] .text-control {
   border: 2px solid #e54858;
-}
-
-input[data-error]::after {
-  content: attr(data-error);
-  font-size: 0.4em;
-  color: red;
 }
 
 .checkbox-label,
@@ -526,6 +526,33 @@ input[data-error]::after {
 .text-label {
   font-weight: normal;
   font-size: 16px;
+  margin: 16px 0 6px 0;
+}
+
+.modal-body form {
+  position: relative;
+}
+
+.success-message {
+  position: absolute;
+  inset: 0;
+  background: #232323;
+  z-index: 2;
+  display: flex;
+  text-align: center;
+  /* Cacher le message tant que le formulaire n'est pas validé */
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.5s;
+}
+
+.success-message p {
+  margin: auto;
+  font-size: 36px;
+}
+
+.success-message.valid {
+  opacity: 1;
 }
 
 /* MODAL-end *******************************************************/
