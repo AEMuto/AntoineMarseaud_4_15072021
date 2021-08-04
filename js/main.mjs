@@ -7,7 +7,7 @@ const openButton = document.querySelectorAll('.btn--signup');
 const modalOuter = document.querySelector('.modal-outer');
 const form = document.querySelector("form[name='reserve']");
 const closeButton = document.querySelector('span.close');
-const succesMessage = document.querySelector('.success-message');
+const successMessage = document.querySelector('.success-message');
 
 // Gestion de l'ouverture/fermeture de la barre de navigation ------/
 
@@ -111,7 +111,7 @@ fields.forEach(field => {
 });
 
 function toggleSuccess() {
-  succesMessage.classList.toggle('valid');
+  successMessage.classList.toggle('valid');
 }
 
 /**
