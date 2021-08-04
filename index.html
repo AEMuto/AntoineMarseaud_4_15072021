@@ -14,11 +14,11 @@
 
 <body>
 
-  <nav class="nav" id="myTopnav">
+  <nav class="nav">
     <div class="nav__logo">
       <img alt="logo" src="./img/logo.png" />
     </div>
-    <a href="javascript:void(0);" class="burger" onclick="editNav()">
+    <a href="javascript:void(0);" class="nav__burger">
       <i class="fa fa-bars"></i>
     </a>
     <div class="nav__links">
@@ -55,7 +55,7 @@
       <div class="modal-inner">
         <span class="close"></span>
         <div class="modal-body">
-          <form name="reserve" action="index.html" method="get" novalidate>
+          <form name="reserve" action="index.html" method="post" novalidate>
             <div class="success-message">
               <p>Merci !<br>Votre réservation a été reçue</p>
             </div>
@@ -133,7 +133,7 @@
       Copyright 2014 - 2021, GameOn Inc.
     </p>
   </footer>
-  <script src="./js/main.js"></script>
+  <script type="module" src="./js/main.mjs"></script>
 </body>
 
 </html>

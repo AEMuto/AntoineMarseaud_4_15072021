@@ -154,15 +154,15 @@ button {
   border-radius: 10px;
 }
 
-.nav .burger {
+.nav .nav__burger {
   font-size: 28px;
   color: var(--primary);
   padding: 8px 12px;
   display: none;
 }
 
-.nav .burger:active,
-.nav .burger:hover {
+.nav .nav__burger:active,
+.nav .nav__burger:hover {
   background: var(--primary);
   color: white;
   border-radius: 10px;
@@ -173,7 +173,7 @@ button {
     display: none;
   }
 
-  .nav .burger {
+  .nav .nav__burger {
     display: block;
   }
 
