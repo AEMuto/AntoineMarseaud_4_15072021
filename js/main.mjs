@@ -1,4 +1,4 @@
-import { Input } from './components/modal.mjs';
+import { Input } from './components/Input.mjs';
 
 // DOM Elements ----------------------------------------------------/
 
@@ -110,6 +110,9 @@ fields.forEach(field => {
   });
 });
 
+/**
+ * Permet d'afficher/masquer le message de succès.
+ */
 function toggleSuccess() {
   successMessage.classList.toggle('valid');
 }
@@ -117,12 +120,14 @@ function toggleSuccess() {
 /**
  * 1. Empêcher le comportement par défaut du submit
  * 2. Les champs sont-ils valides ?
- * => Si faux récupérer les champs invalide et montrer leur erreur
- * => Sinon afficher le message de validation puis fermer la modale
+ *
+ * → Si faux récupérer les champs invalides et montrer leur erreur
+ *
+ * → Sinon afficher le message de validation puis fermer la modale
  *    et réinitialiser le formulaire. Ensuite cacher le message de
  *    validation. Ainsi le formulaire est de nouveau disponible si
  *    l'utilisateur décide de soumettre une autre inscription.
- * @param {*} event
+ * @param {SubmitEvent} event
  */
 
 function validate(event) {
@@ -141,7 +146,10 @@ function validate(event) {
         toggleSuccess();
       }, 500);
       closeModal();
-      form.reset();
+      form.reset(); // Réinitialiser le formulaire
+      fields.forEach(field => {
+        field.isValid = false; // Réinitialiser l'état des champs
+      });
     }, 1000);
   }
 }
